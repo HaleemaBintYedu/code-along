@@ -1,5 +1,6 @@
-import cat from "../assets/image/cat.jpg"
+import coffee from "../assets/Image/coffee.jpg";
 
 export const Image = () => {
-    return <img src={cat} alt="cat pic" />;
+    return <img src={coffee} alt="coffee pic" />
 };
+

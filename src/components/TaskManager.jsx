@@ -1,31 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import { v4 as uuid } from "uuid";
+
 import TaskItem from "./TaskItem";
 
 // import background from "../assests/background.jpg";
 // import { list } from "postcss";
 
+
 function TaskManager( ) {  // Form function
-    const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState(() => {
+        const tasks = localStorage.getItem("tasks");
+        if (!tasks) return [];
+        return JSON.parse(tasks);
+    });
     const [input, setInput] = useState("");
     
     const handleSubmit = (e) => {    // Submit function
         e.preventDefault();
         if (input === "") return;          // Setting Array
 
-        setTasks([input, ...tasks])
-        setInput("")
+        const newTask = {
+            id: uuid(),
+            text: input,
+            completed: true,
+        };
+
+        setTasks([newTask, ...tasks]);
+        setInput("");
     };
 
-    const handleDelete = idx => {           //idx means index
-        const newTask = tasks.filter((task) => task !== idx);
-        setTasks(newTask)
-    }                  
-
+    const handleDelete = (id) => {           //idx means index
+        const newTasks = tasks.filter((task) => task.id !== id);
+        setTasks(newTasks)
+    }        
+    
+    useEffect(() => {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }, [tasks]);
 
 
     return (
-    <div className="h-screen w-screen bg-blue-600 flex justify-center items-center">
-    <div className="max-w-xl max-h-96 bg-white rounded-xl px-5 py-10">
+
+      <div className="h-screen w-screen bg-blue-600 flex justify-center items-center">
+       <div className="max-w-xl max-h-96 bg-white rounded-xl px-5 py-10">
         <form 
        
         className="space-x-5 flex w-[30rem] mb-10" 
@@ -50,8 +68,8 @@ function TaskManager( ) {  // Form function
 
         <div className="space-y-2 overflow-y-auto h-56">
             {tasks.map((task) => (
-                <TaskItem task={task} handleDelete={handleDelete} />
-                ))}         
+                <TaskItem key={task.id} task={task} handleDelete={handleDelete} />
+                ))} 
             
 
             

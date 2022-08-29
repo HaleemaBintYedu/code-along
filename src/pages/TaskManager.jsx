@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-
 import { v4 as uuid } from "uuid";
-
 import TaskItem from "../components/TaskItem";
+import { useTaskContext } from "../context/tasksContext"
 
 // import background from "../assests/background.jpg";
 // import { list } from "postcss";
 
 
-function TaskManager( ) {  // Form function
-    const [tasks, setTasks] = useState(() => {
-        const tasks = localStorage.getItem("tasks");
-        if (!tasks) return [];
-        return JSON.parse(tasks);
-    });
+function TaskManager() {  // Form function
+    const { tasks, setValue } = useTaskContext();
+
+    // const [tasks, setTasks] = useState(() => {
+    //     const tasks = localStorage.getItem("tasks");
+    //     if (!tasks) return [];
+    //     return JSON.parse(tasks);
+    // });
     const [input, setInput] = useState("");
     
     const handleSubmit = (e) => {    // Submit function
@@ -26,13 +27,13 @@ function TaskManager( ) {  // Form function
             completed: true,
         };
 
-        setTasks([newTask, ...tasks]);
+        setValue([newTask, ...tasks]);
         setInput("");
     };
 
     const handleDelete = (id) => {           //idx means index
         const newTasks = tasks.filter((task) => task.id !== id);
-        setTasks(newTasks)
+        setValue(newTasks)
     }        
     
     useEffect(() => {
